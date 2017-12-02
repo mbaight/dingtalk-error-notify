@@ -1,0 +1,58 @@
+server:
+  port: 3506
+spring:
+  application:
+    name: dingtalk-error-notify-example
+
+# UI显示日志
+logging:
+  file: ./logs/${spring.application.name}.log
+  level:
+    root: debug
+    rx: warn
+    io.undertow: warn
+    org.springframework: warn
+    org.apache: warn
+    com.netflix: warn
+    de.codecentric: warn
+    com.sun.jersey: warn
+    org.I0Itec: warn
+    javax.activation: warn
+    com.sun: warn
+    javax: warn
+    sun.rmi: warn
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 10
+  client:
+    registry-fetch-interval-seconds: 5
+    service-url:
+      defaultZone: ${EUREKA_REPLICAS_LIST}
+
+
+
+sgsl:
+  custom:
+    ding-talk:
+      error-notify:
+        #钉钉通知URL
+        api-url: https://oapi.dingtalk.com/robot/send?access_token=37cdf031d7d984999715f1cfebee13959c418aba68a185331a1b5880804bb55d
+        #通知链接URL，可以不设置。如果不设置，则通知链接指向发生异常的日志文件URL
+        source-url: http://172.16.10.194:1411
+        #钉钉通知中的图标,童鞋们可以在这里加上自己喜欢的图标
+        picture-url: http://icons.iconarchive.com/icons/danieledesantis/playstation-flat/512/playstation-cross-icon.png
+        #获取本机IP时的IP前缀匹配字符串，如本机IP为192.168.1.25，则前缀可指定为192.168.
+        #此参数是为了避免多网卡时出现与预期IP不一致的情况，并排除127.0.0.1等不能指代本机IP的字段
+        #此参数可为空
+        include-local-ip-prefix: 192.168.
+        #获取本机IP时的IP排除列表
+        #此参数可为空
+        exclude-local-ip-prefixs:
+          - 127.0.0.1
+        #不进行钉钉通知的异常类列表
+        #此参数可为空
+        exclude-exceptions:
+          - org.springframework.http.converter.HttpMessageNotReadableException
